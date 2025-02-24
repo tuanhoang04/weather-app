@@ -21,7 +21,7 @@ const ResponsiveChart = ({ fourWeekDays, maxTempsByDay, minTempsByDay }) => {
           <Chart
             options={{
               chart: {
-                id: "basic-bar",
+                id: "line-chart",
                 toolbar: {
                   show: false,
                 },
@@ -46,9 +46,10 @@ const ResponsiveChart = ({ fourWeekDays, maxTempsByDay, minTempsByDay }) => {
               colors: ["#e15759", "#4e79a7"],
               legend: {
                 show: true,
-                showForSingleSeries: false,
+                showForSingleSeries: true,
                 showForNullSeries: true,
                 showForZeroSeries: true,
+                shape: "square",
                 position: "bottom",
                 horizontalAlign: "center",
                 floating: false,
@@ -70,9 +71,9 @@ const ResponsiveChart = ({ fourWeekDays, maxTempsByDay, minTempsByDay }) => {
                   useSeriesColors: false,
                 },
                 markers: {
-                  size: 7,
-                  shape: undefined,
-                  strokeWidth: 1,
+                  size: 6,
+                  shape: "square",
+                  strokeWidth: 0.7,
                   fillColors: undefined,
                   customHTML: undefined,
                   onClick: undefined,
@@ -111,9 +112,9 @@ const ResponsiveChart = ({ fourWeekDays, maxTempsByDay, minTempsByDay }) => {
                   foreColor: "#fff",
                   padding: 4,
                   borderRadius: 2,
-                  borderWidth: 1,
+                  borderWidth: 0.5,
                   borderColor: "#fff",
-                  opacity: 0.9,
+                  opacity: 0.8,
                   dropShadow: {
                     enabled: false,
                     top: 1,
@@ -127,11 +128,11 @@ const ResponsiveChart = ({ fourWeekDays, maxTempsByDay, minTempsByDay }) => {
             }}
             series={[
               {
-                name: "Maximum temperature",
+                name: "Maximum Temperature",
                 data: maxTempsByDay,
               },
               {
-                name: "Maximum temperature",
+                name: "Minimum Temperature",
                 data: minTempsByDay,
               },
             ]}

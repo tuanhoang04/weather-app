@@ -186,7 +186,7 @@ function App() {
                   locationName={locationInfo[0].name}
                   currHour={hour}
                 />
-                <hr style={{border: '1px solid #FFFFFF'}}/>
+                <hr style={{border: '1 px solid #FFFFFF'}}/>
                 <MainWeather
                   iconCode={weatherInfo.list[0].weather[0].icon}
                   temp={weatherInfo.list[0].main.temp}
