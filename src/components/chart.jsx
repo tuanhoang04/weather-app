@@ -4,7 +4,6 @@ import Chart from "react-apexcharts";
 
 const ResponsiveChart = ({ fourWeekDays, maxTempsByDay, minTempsByDay }) => {
   const isMobile = useMediaQuery("(max-width:768px)");
-  console.log(isMobile);
   return (
     <div
       className="chart-container px-2"
@@ -53,7 +52,7 @@ const ResponsiveChart = ({ fourWeekDays, maxTempsByDay, minTempsByDay }) => {
                 position: "bottom",
                 horizontalAlign: "center",
                 floating: false,
-                fontSize: "17px",
+                fontSize: "15px",
                 fontFamily: "Roboto, sans-serif",
                 fontWeight: "light",
                 formatter: undefined,

@@ -98,8 +98,14 @@ function App() {
         currMin = 10000;
         currMax = -10000;
       }
-      currMin = Math.min(currMin, Math.round(weatherInfo.list[i].main.temp_min));
-      currMax = Math.max(currMax, Math.round(weatherInfo.list[i].main.temp_max));
+      currMin = Math.min(
+        currMin,
+        Math.round(weatherInfo.list[i].main.temp_min)
+      );
+      currMax = Math.max(
+        currMax,
+        Math.round(weatherInfo.list[i].main.temp_max)
+      );
     }
     if (newMaxTempsByDay[4] === 10000 && newMinTempsByDay[4] === 10000) {
       newMaxTempsByDay[4] = currMax;
@@ -181,18 +187,18 @@ function App() {
             <div className="first-row row mx-1">
               <div className="currWeather col-md bg-dark bg-opacity-50 p-3 rounded-4 shadow-lg border border-white border-opacity-25 m-1">
                 <div className="d-flex flex-column p-2">
-                <CurrentTime
-                  tz={weatherInfo.city.timezone}
-                  locationName={locationInfo[0].name}
-                  currHour={hour}
-                />
-                <hr style={{border: '1 px solid #FFFFFF'}}/>
-                <MainWeather
-                  iconCode={weatherInfo.list[0].weather[0].icon}
-                  temp={weatherInfo.list[0].main.temp}
-                  feelsLike={weatherInfo.list[0].main.feels_like}
-                  description={weatherInfo.list[0].weather[0].description}
-                />
+                  <CurrentTime
+                    tz={weatherInfo.city.timezone}
+                    locationName={locationInfo[0].name}
+                    currHour={hour}
+                  />
+                  <hr />
+                  <MainWeather
+                    iconCode={weatherInfo.list[0].weather[0].icon}
+                    temp={weatherInfo.list[0].main.temp}
+                    feelsLike={weatherInfo.list[0].main.feels_like}
+                    description={weatherInfo.list[0].weather[0].description}
+                  />
                 </div>
               </div>
 

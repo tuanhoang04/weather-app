@@ -3,7 +3,7 @@ import { DateTime } from "luxon";
 export const getCurrLocalHourMin = (timezoneOffset) => {
   const nowUtc = DateTime.utc();
   const localTime = nowUtc.plus({ seconds: timezoneOffset });
-  return localTime.toFormat("HH:MMa");
+  return localTime.toFormat("HH:mma");
 };
 
 // get weekday from openweather API date format

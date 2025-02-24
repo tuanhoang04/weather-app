@@ -13,7 +13,7 @@ export default function MoreDetails({
       : pressureSea) + "hPa";
   const formattedWind = windspeed + " m/s";
   const formattedHumidity = humidity + "%";
-  const formattedRainProb = rainProb * 100 + "%";
+  const formattedRainProb = Math.round(rainProb * 100) + "%";
 
   return (
     <div className="d-flex p-2 flex-column">
@@ -25,7 +25,7 @@ export default function MoreDetails({
         Windspeed: <b>{formattedWind}</b>
       </p>
 
-      <p className="text-light text-md-start m-1">
+      <p className="text-white text-md-start m-1">
         Air humidity: <b>{formattedHumidity}</b>
       </p>
 

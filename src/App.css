@@ -32,15 +32,15 @@ input.formcontrol:focus {
   color: white;
 }
 
-
-
 .MuiChartsAxis-bottom .MuiChartsAxis-line,
 .MuiChartsAxis-left .MuiChartsAxis-line {
   stroke: white !important;
   stroke-width: 0.8;
 }
 
-
+hr {
+  border: 1px solid rgba(255, 255, 255, 0.9) !important;
+}
 
 .MuiChartsAxis-tickLabel,
 .MuiChartsAxis-label,
@@ -56,5 +56,3 @@ input.formcontrol:focus {
 .leaflet-control-attribution.leaflet-control {
   visibility: hidden;
 }
-
-
