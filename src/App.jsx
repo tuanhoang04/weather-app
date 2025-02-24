@@ -223,7 +223,7 @@ function App() {
             </div>
 
             <div className="second-row row m-1 justify-content-between">
-              <div className="col-md-5 m-1 d-flex justify-content-center align-items-center bg-dark bg-opacity-50 rounded-4 shadow-lg border border-white border-opacity-25">
+              <div className="col-md-5 m-1 d-flex justify-content-center align-items-center bg-dark bg-opacity-50 rounded-4 shadow-lg border border-white border-opacity-25 p-0">
                 <Map latitude={latitude} longitude={longitude} />
               </div>
               <div className="col-md-6 m-1 d-flex justify-content-center align-items-center bg-dark bg-opacity-50 rounded-4 shadow-lg border border-white border-opacity-25 flex-wrap">
