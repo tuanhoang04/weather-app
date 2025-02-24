@@ -16,7 +16,7 @@ export default function MoreDetails({
   const formattedRainProb = rainProb * 100 + "%";
 
   return (
-    <div className="d-flex p-4 flex-column">
+    <div className="d-flex p-2 flex-column">
       <p className="text-light text-md-start fs-5">
         <b>More Details: </b>
       </p>

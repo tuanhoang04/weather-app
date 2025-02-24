@@ -1,12 +1,12 @@
 import "./App.css";
 import useSWR from "swr";
-import CurrentWeather from "./components/current-weather.jsx";
-import WeatherIcon from "./components/weather-icon.jsx";
+import CurrentTime from "./components/current-time.jsx";
+import MainWeather from "./components/main-weather.jsx";
 import MoreDetails from "./components/more-weather-details.jsx";
 import WeatherByHour from "./components/weather-by-hour.jsx";
 import Map from "./components/map.jsx";
 import { useEffect, useState } from "react";
-import { LineChart } from "@mui/x-charts/LineChart";
+import ResponsiveChart from "./components/chart.jsx";
 import * as dateTime from "./utils/date-time.js";
 
 // openweathermap 5 days weather forecast API key
@@ -16,16 +16,17 @@ const APIKey = "917f68a3126efb6f9a8db6fce3b5f830";
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
 function App() {
-  const [backgroundImgURL, setBackgroundImgURL] = useState("images/day.jpg");
+  const [backgroundImgURL, setBackgroundImgURL] = useState("");
   const [latitude, setLatitude] = useState("21.00626");
   const [longitude, setLongitude] = useState("105.85537");
   const [searchQuery, setSearchQuery] = useState("");
   const [currSearch, setCurrSearch] = useState("Hanoi");
+  const [cityName, setCityName] = useState("Hanoi");
   const [hour, setHour] = useState(null);
   const [fourWeekDays, setFourWeekDays] = useState(null);
-  const [weatherByHours, setWeatherByHours] = useState(new Array(8));
-  const [minTempsByDay, setMinTempsByDay] = useState([0, 0, 0, 0, 0]);
-  const [maxTempsByDay, setMaxTempsByDay] = useState([0, 0, 0, 0, 0]);
+  const [weatherByHours, setWeatherByHours] = useState(new Array(9));
+  const [minTempsByDay, setMinTempsByDay] = useState([0, 0, 0, 0]);
+  const [maxTempsByDay, setMaxTempsByDay] = useState([0, 0, 0, 0]);
   const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
   const {
@@ -62,8 +63,8 @@ function App() {
       setBackgroundImgURL("images/night.jpg");
     }
 
-    let newWeatherByHours = new Array(8);
-    for (let i = 0; i < 8; i++) {
+    let newWeatherByHours = new Array(9);
+    for (let i = 0; i < 9; i++) {
       newWeatherByHours[i] = (
         <WeatherByHour
           key={weatherInfo.list[i].dt}
@@ -75,8 +76,8 @@ function App() {
       );
     }
 
-    let newMinTempsByDay = new Array(5);
-    let newMaxTempsByDay = new Array(5);
+    let newMinTempsByDay = new Array(5).fill(10000);
+    let newMaxTempsByDay = new Array(5).fill(10000);
     let idx = 0;
     let currMin = 10000;
     let currMax = -10000;
@@ -85,7 +86,7 @@ function App() {
       openWeatherTZ
     );
 
-    for (let i = 0; idx < 5; i++) {
+    for (let i = 0; i < 40 && idx < 5; i++) {
       let currDay = dateTime.getWeekDayFromDate(
         weatherInfo.list[i].dt_txt,
         openWeatherTZ
@@ -97,10 +98,13 @@ function App() {
         currMin = 10000;
         currMax = -10000;
       }
-      currMin = Math.min(currMin, weatherInfo.list[i].main.temp_min);
-      currMax = Math.max(currMax, weatherInfo.list[i].main.temp_max);
+      currMin = Math.min(currMin, Math.round(weatherInfo.list[i].main.temp_min));
+      currMax = Math.max(currMax, Math.round(weatherInfo.list[i].main.temp_max));
     }
-
+    if (newMaxTempsByDay[4] === 10000 && newMinTempsByDay[4] === 10000) {
+      newMaxTempsByDay[4] = currMax;
+      newMinTempsByDay[4] = currMin;
+    }
     const weekDay = dateTime
       .getWeekDayFromDate(weatherInfo.list[0].dt_txt, openWeatherTZ)
       .substring(0, 3);
@@ -130,9 +134,11 @@ function App() {
   // whenever locationInfo is reassigned, change the usestate latitude, longitude -> change the weather info
   useEffect(() => {
     if (!locationInfo || isLoadingLocation) return;
+    console.log(locationInfo);
     if (locationInfo.length > 0) {
       setLatitude(locationInfo[0].lat);
       setLongitude(locationInfo[0].lon);
+      setCityName(locationInfo[0].name);
     }
   }, [locationInfo]);
 
@@ -165,7 +171,6 @@ function App() {
         </form>
       </nav>
 
-      
       {fourWeekDays &&
         maxTempsByDay &&
         minTempsByDay &&
@@ -174,24 +179,24 @@ function App() {
         locationInfo && (
           <div>
             <div className="first-row row mx-1">
-              <div className="col-md currWeather bg-dark bg-opacity-50 p-3 rounded-4 shadow-lg border border-white border-opacity-25 d-flex flex-row m-1">
-                <div className="p-2 cityAndIcon">
-                  <WeatherIcon
-                    iconCode={weatherInfo.list[0].weather[0].icon}
-                    locationName={locationInfo[0].name}
-                  />
-                </div>
-
-                <CurrentWeather
+              <div className="currWeather col-md bg-dark bg-opacity-50 p-3 rounded-4 shadow-lg border border-white border-opacity-25 m-1">
+                <div className="d-flex flex-column p-2">
+                <CurrentTime
                   tz={weatherInfo.city.timezone}
+                  locationName={locationInfo[0].name}
+                  currHour={hour}
+                />
+                <hr style={{border: '1px solid #FFFFFF'}}/>
+                <MainWeather
+                  iconCode={weatherInfo.list[0].weather[0].icon}
                   temp={weatherInfo.list[0].main.temp}
                   feelsLike={weatherInfo.list[0].main.feels_like}
                   description={weatherInfo.list[0].weather[0].description}
-                  currHour={hour}
                 />
+                </div>
               </div>
 
-              <div className="moredetails col-md bg-dark bg-opacity-50 rounded-4 shadow-lg border border-white border-opacity-25 m-1">
+              <div className="moredetails col-md p-3 bg-dark bg-opacity-50 rounded-4 shadow-lg border border-white border-opacity-25 m-1">
                 <MoreDetails
                   windspeed={weatherInfo.list[0].wind.speed}
                   humidity={weatherInfo.list[0].main.humidity}
@@ -201,7 +206,7 @@ function App() {
                 />
               </div>
 
-              <div className="p-2 col-lg-6 d-flex justify-content-center align-items-center bg-dark bg-opacity-50 rounded-4 shadow-lg border border-white border-opacity-25 m-1">
+              <div className="p-3 col-lg-6 d-flex justify-content-center align-items-center bg-dark bg-opacity-50 rounded-4 shadow-lg border border-white border-opacity-25 m-1">
                 <div
                   className="d-flex flex-row overflow-auto align-items-center"
                   style={{ WebkitOverflowScrolling: "touch" }}
@@ -215,39 +220,12 @@ function App() {
               <div className="col-md-5 m-1 d-flex justify-content-center align-items-center bg-dark bg-opacity-50 rounded-4 shadow-lg border border-white border-opacity-25">
                 <Map latitude={latitude} longitude={longitude} />
               </div>
-              <div
-                className="col-md-6 m-1 d-flex justify-content-center align-items-center bg-dark bg-opacity-50 rounded-4 shadow-lg border border-white border-opacity-25 flex-wrap"
-                style={{ height: "290px" }}
-              >
-                {
-                  <LineChart
-                    xAxis={[
-                      {
-                        data: fourWeekDays,
-                        scaleType: "band",
-                      },
-                    ]}
-                    yAxis={[
-                      {
-                        label: "Temperature (°C)", // Y-axis label text (e.g., Temperature)
-                      },
-                    ]}
-                    series={[
-                      {
-                        data: maxTempsByDay,
-                        label: "Maximum Temperature",
-                        curve: "linear",
-                        color: "#e15759",
-                      },
-                      {
-                        data: minTempsByDay,
-                        label: "Minimum Temperature",
-                        curve: "linear",
-                        color: "#4e79a7",
-                      },
-                    ]}
-                  />
-                }
+              <div className="col-md-6 m-1 d-flex justify-content-center align-items-center bg-dark bg-opacity-50 rounded-4 shadow-lg border border-white border-opacity-25 flex-wrap">
+                <ResponsiveChart
+                  fourWeekDays={fourWeekDays}
+                  maxTempsByDay={maxTempsByDay}
+                  minTempsByDay={minTempsByDay}
+                />
               </div>
             </div>
           </div>

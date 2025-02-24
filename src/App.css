@@ -32,9 +32,7 @@ input.formcontrol:focus {
   color: white;
 }
 
-span {
-  text-shadow: 1px 1px #0c0c0c;
-}
+
 
 .MuiChartsAxis-bottom .MuiChartsAxis-line,
 .MuiChartsAxis-left .MuiChartsAxis-line {
