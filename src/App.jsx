@@ -1,5 +1,6 @@
 import "./App.css";
 import useSWR from "swr";
+import { useGeolocated } from "react-geolocated";
 import CurrentTime from "./components/current-time.jsx";
 import MainWeather from "./components/main-weather.jsx";
 import MoreDetails from "./components/more-weather-details.jsx";
@@ -8,6 +9,7 @@ import Map from "./components/map.jsx";
 import { useEffect, useState } from "react";
 import ResponsiveChart from "./components/chart.jsx";
 import * as dateTime from "./utils/date-time.js";
+import Demo from "./components/test.jsx";
 
 // openweathermap 5 days weather forecast API key
 const APIKey = "917f68a3126efb6f9a8db6fce3b5f830";
@@ -28,6 +30,8 @@ function App() {
   const [minTempsByDay, setMinTempsByDay] = useState([0, 0, 0, 0]);
   const [maxTempsByDay, setMaxTempsByDay] = useState([0, 0, 0, 0]);
   const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+  
 
   const {
     data: weatherInfo,
@@ -174,6 +178,7 @@ function App() {
           <button className="btn ms-2 my-sm-0" type="submit">
             Search
           </button>
+          
         </form>
       </nav>
 
@@ -184,12 +189,13 @@ function App() {
         weatherInfo &&
         locationInfo && (
           <div>
+            
             <div className="first-row row mx-1">
               <div className="currWeather col-md bg-dark bg-opacity-50 p-3 rounded-4 shadow-lg border border-white border-opacity-25 m-1">
                 <div className="d-flex flex-column p-2">
                   <CurrentTime
-                    tz={weatherInfo.city.timezone}
-                    locationName={locationInfo[0].name}
+                    tz={weatherInfo?.city?.timezone}
+                    locationName={locationInfo[0]?.name}
                     currHour={hour}
                   />
                   <hr />
