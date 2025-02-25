@@ -6,10 +6,10 @@ import MainWeather from "./components/main-weather.jsx";
 import MoreDetails from "./components/more-weather-details.jsx";
 import WeatherByHour from "./components/weather-by-hour.jsx";
 import Map from "./components/map.jsx";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import ResponsiveChart from "./components/chart.jsx";
 import * as dateTime from "./utils/date-time.js";
-import Demo from "./components/test.jsx";
+import GeoLocator from "./components/GeoLocator.jsx";
 
 // openweathermap 5 days weather forecast API key
 const APIKey = "917f68a3126efb6f9a8db6fce3b5f830";
@@ -23,15 +23,16 @@ function App() {
   const [longitude, setLongitude] = useState("105.85537");
   const [searchQuery, setSearchQuery] = useState("");
   const [currSearch, setCurrSearch] = useState("Hanoi");
-  const [cityName, setCityName] = useState("Hanoi");
+  const [cityName, setCityName] = useState("");
+  const [reversedName, setReversedName] = useState("");
   const [hour, setHour] = useState(null);
   const [fourWeekDays, setFourWeekDays] = useState(null);
   const [weatherByHours, setWeatherByHours] = useState(new Array(9));
   const [minTempsByDay, setMinTempsByDay] = useState([0, 0, 0, 0]);
   const [maxTempsByDay, setMaxTempsByDay] = useState([0, 0, 0, 0]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [showGeo, setShowGeo] = useState(false);
   const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-
-  
 
   const {
     data: weatherInfo,
@@ -49,6 +50,14 @@ function App() {
     isLoadingLocation,
   } = useSWR(
     `https://nominatim.openstreetmap.org/search?q=${currSearch}&format=json&addressdetails=1`,
+    fetcher
+  );
+  const {
+    data: reverseLocationInfo,
+    getReverseLocationError,
+    isLoadingReverseLocation,
+  } = useSWR(
+    `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`,
     fetcher
   );
   // use the corresponding background image to daytime/nighttime and set
@@ -141,6 +150,25 @@ function App() {
     setCurrSearch(searchQuery);
   };
 
+  const handleUseYourLocation = () => {
+    setShowGeo(true);
+  };
+
+  const handleLocationObtained = useCallback(
+    (lat, lng) => {
+      setLatitude(lat);
+      setLongitude(lng);
+      console.log(lat, lng);
+      setShowGeo(false);
+    },
+    [showGeo]
+  );
+
+  useEffect(() => {
+    if (!reverseLocationInfo || isLoadingLocation) return;
+    setCityName(reverseLocationInfo.name);
+  }, [reverseLocationInfo]);
+
   // whenever locationInfo is reassigned, change the usestate latitude, longitude -> change the weather info
   useEffect(() => {
     if (!locationInfo || isLoadingLocation) return;
@@ -164,21 +192,49 @@ function App() {
     >
       <nav className="d-flex flex-row navbar justify-content-center w-100">
         <form className="form-inline d-flex" onSubmit={handleLocationSearch}>
-          <input
-            className="form-control w-75"
-            type="search"
-            placeholder="Search for cities"
-            spellCheck="false"
-            autoComplete="off"
-            aria-autocomplete="none"
-            aria-label="Search"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
+          <div style={{ position: "relative", width: "100%" }}>
+            <input
+              className="form-control w-75"
+              type="search"
+              placeholder="Search for cities"
+              spellCheck="false"
+              autoComplete="off"
+              aria-label="Search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onFocus={() => setShowSuggestions(true)}
+              // Using onBlur with a short timeout allows the click to register
+              onBlur={() => setTimeout(() => setShowSuggestions(false), 100)}
+            />
+            {showSuggestions && (
+              <ul
+                className="suggestions-list"
+                style={{
+                  listStyle: "none",
+                  padding: 0,
+                  margin: 0,
+                  position: "absolute",
+                  background: "white",
+                  width: "75%",
+                  boxShadow: "0 2px 5px rgba(0,0,0,0.2)",
+                  zIndex: 1000,
+                }}
+              >
+                <li
+                  style={{ padding: "8px", cursor: "pointer" }}
+                  onMouseDown={handleUseYourLocation}
+                >
+                  Use your location
+                </li>
+              </ul>
+            )}
+            {showGeo && (
+              <GeoLocator onLocationObtained={handleLocationObtained} />
+            )}
+          </div>
           <button className="btn ms-2 my-sm-0" type="submit">
             Search
           </button>
-          
         </form>
       </nav>
 
@@ -189,13 +245,12 @@ function App() {
         weatherInfo &&
         locationInfo && (
           <div>
-            
             <div className="first-row row mx-1">
               <div className="currWeather col-md bg-dark bg-opacity-50 p-3 rounded-4 shadow-lg border border-white border-opacity-25 m-1">
                 <div className="d-flex flex-column p-2">
                   <CurrentTime
                     tz={weatherInfo?.city?.timezone}
-                    locationName={locationInfo[0]?.name}
+                    locationName={cityName}
                     currHour={hour}
                   />
                   <hr />
