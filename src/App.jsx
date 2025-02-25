@@ -169,7 +169,8 @@ function App() {
     (lat, lng) => {
       setLatitude(lat);
       setLongitude(lng);
-      setCityName(reverseGeocode(lat,lng).then(data=>data.address.suburb));
+      setCityName(reverseGeocode(lat,lng).then(data=>data.name));
+      setSearchQuery("");
       console.log(lat, lng);
       setShowGeo(false);
     },
@@ -203,7 +204,7 @@ function App() {
         <form className="form-inline d-flex" onSubmit={handleLocationSearch}>
           <div style={{ position: "relative", width: "100%" }}>
             <input
-              className="form-control w-75"
+              className="form-control w-100"
               type="search"
               placeholder="Search for cities"
               spellCheck="false"
@@ -217,15 +218,14 @@ function App() {
             />
             {showSuggestions && (
               <ul
-                className="suggestions-list"
+                className="suggestions-list bg-dark text-white bg-opacity-75 rounded-1 shadow-lg border border-white border-opacity-25"
                 style={{
                   listStyle: "none",
                   padding: 0,
                   margin: 0,
                   position: "absolute",
                   background: "white",
-                  width: "75%",
-                  boxShadow: "0 2px 5px rgba(0,0,0,0.2)",
+                  width: "100%",
                   zIndex: 1000,
                 }}
               >
