@@ -163,25 +163,15 @@ function App() {
 
   async function handleUseYourLocation() {
     try {
-      const result = await navigator.permissions.query({ name: "geolocation" });
-      if (result.state === "prompt" || result.state === "granted") {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            handleLocationObtained(
-              position.coords.latitude,
-              position.coords.longitude
-            );
-          },
-          (error) => {
-            console.error("Error getting location:", error);
-          }
+      navigator.geolocation.getCurrentPosition((position) => {
+        handleLocationObtained(
+          position.coords.latitude,
+          position.coords.longitude
         );
-      } else {
-        setLatitude("21.00626");
-        setLongitude("105.85537");
-      }
+      });
     } catch (error) {
-      console.error("Error checking location permissions:", error);
+      setLatitude("21.00626");
+      setLongitude("105.85537");
     }
   }
 
@@ -195,21 +185,18 @@ function App() {
   };
 
   useEffect(() => {
-    navigator.permissions.query({ name: "geolocation" }).then((result) => {
-      if (result.state === "granted") {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            handleLocationObtained(
-              position.coords.latitude,
-              position.coords.longitude
-            );
-          },
-          (error) => {
-            console.error("Error getting location:", error);
-          }
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        handleLocationObtained(
+          position.coords.latitude,
+          position.coords.longitude
         );
+      },
+      (error) => {
+        setLatitude("21.00626");
+        setLongitude("105.85537");
       }
-    });
+    );
   }, []);
 
   // whenever locationInfo is reassigned, change the usestate latitude, longitude -> change the weather info
