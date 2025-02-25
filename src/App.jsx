@@ -23,7 +23,7 @@ function App() {
   const [longitude, setLongitude] = useState("105.85537");
   const [searchQuery, setSearchQuery] = useState("");
   const [currSearch, setCurrSearch] = useState("Hanoi");
-  const [cityName, setCityName] = useState("");
+  const [cityName, setCityName] = useState("Hanoi");
   const [reversedName, setReversedName] = useState("");
   const [hour, setHour] = useState(null);
   const [fourWeekDays, setFourWeekDays] = useState(null);
@@ -52,14 +52,25 @@ function App() {
     `https://nominatim.openstreetmap.org/search?q=${currSearch}&format=json&addressdetails=1`,
     fetcher
   );
-  const {
-    data: reverseLocationInfo,
-    getReverseLocationError,
-    isLoadingReverseLocation,
-  } = useSWR(
-    `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`,
-    fetcher
-  );
+
+  async function reverseGeocode(latitude, longitude) {
+    const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`;
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+      });
+
+      if (!response.ok) {
+        console.log("Invalid API fetching for Nominatim reverse geocoding");
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error fetching reverse geocode data:", error);
+      return null;
+    }
+  }
+
   // use the corresponding background image to daytime/nighttime and set
   // weather-by-hour array to new divs since the whole weatherInfo is changed
   useEffect(() => {
@@ -158,16 +169,14 @@ function App() {
     (lat, lng) => {
       setLatitude(lat);
       setLongitude(lng);
+      setCityName(reverseGeocode(lat,lng).then(data=>data.address.suburb));
       console.log(lat, lng);
       setShowGeo(false);
     },
     [showGeo]
   );
 
-  useEffect(() => {
-    if (!reverseLocationInfo || isLoadingLocation) return;
-    setCityName(reverseLocationInfo.name);
-  }, [reverseLocationInfo]);
+
 
   // whenever locationInfo is reassigned, change the usestate latitude, longitude -> change the weather info
   useEffect(() => {
