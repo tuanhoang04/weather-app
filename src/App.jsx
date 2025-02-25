@@ -21,7 +21,7 @@ function App() {
   const [longitude, setLongitude] = useState();
   const [searchQuery, setSearchQuery] = useState();
   const [currSearch, setCurrSearch] = useState();
-  const [cityName, setCityName] = useState("Hanoi");
+  const [cityName, setCityName] = useState("");
   const [hour, setHour] = useState(null);
   const [fourWeekDays, setFourWeekDays] = useState(null);
   const [weatherByHours, setWeatherByHours] = useState(new Array(9));
@@ -75,7 +75,6 @@ function App() {
   // weather-by-hour array to new divs since the whole weatherInfo is changed
   useEffect(() => {
     if (!weatherInfo || !weatherInfo.list) return;
-    console.log(JSON.stringify(weatherInfo));
     const openWeatherTZ = weatherInfo.city.timezone;
     const timeNow = dateTime.getCurrLocalHourMin(openWeatherTZ);
 
