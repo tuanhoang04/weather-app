@@ -1,6 +1,5 @@
 import "./App.css";
 import useSWR from "swr";
-import { useGeolocated } from "react-geolocated";
 import CurrentTime from "./components/current-time.jsx";
 import MainWeather from "./components/main-weather.jsx";
 import MoreDetails from "./components/more-weather-details.jsx";
@@ -9,7 +8,6 @@ import Map from "./components/map.jsx";
 import { useEffect, useState, useCallback } from "react";
 import ResponsiveChart from "./components/chart.jsx";
 import * as dateTime from "./utils/date-time.js";
-import GeoLocator from "./components/GeoLocator.jsx";
 
 // openweathermap 5 days weather forecast API key
 const APIKey = "917f68a3126efb6f9a8db6fce3b5f830";
@@ -19,19 +17,17 @@ const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
 function App() {
   const [backgroundImgURL, setBackgroundImgURL] = useState("");
-  const [latitude, setLatitude] = useState("21.00626");
-  const [longitude, setLongitude] = useState("105.85537");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [currSearch, setCurrSearch] = useState("Hanoi");
+  const [latitude, setLatitude] = useState();
+  const [longitude, setLongitude] = useState();
+  const [searchQuery, setSearchQuery] = useState();
+  const [currSearch, setCurrSearch] = useState();
   const [cityName, setCityName] = useState("Hanoi");
-  const [reversedName, setReversedName] = useState("");
   const [hour, setHour] = useState(null);
   const [fourWeekDays, setFourWeekDays] = useState(null);
   const [weatherByHours, setWeatherByHours] = useState(new Array(9));
   const [minTempsByDay, setMinTempsByDay] = useState([0, 0, 0, 0]);
   const [maxTempsByDay, setMaxTempsByDay] = useState([0, 0, 0, 0]);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const [showGeo, setShowGeo] = useState(false);
   const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
   const {
@@ -39,7 +35,9 @@ function App() {
     weatherError,
     isLoadingWeather,
   } = useSWR(
-    `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${APIKey}&units=metric`,
+    longitude && latitude
+      ? `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${APIKey}&units=metric`
+      : null,
     fetcher
   );
   // fetch the location infos whenever the currSearch is changed
@@ -49,7 +47,9 @@ function App() {
     getLocationError,
     isLoadingLocation,
   } = useSWR(
-    `https://nominatim.openstreetmap.org/search?q=${currSearch}&format=json&addressdetails=1`,
+    currSearch
+      ? `https://nominatim.openstreetmap.org/search?q=${currSearch}&format=json&addressdetails=1`
+      : null,
     fetcher
   );
 
@@ -75,7 +75,7 @@ function App() {
   // weather-by-hour array to new divs since the whole weatherInfo is changed
   useEffect(() => {
     if (!weatherInfo || !weatherInfo.list) return;
-
+    console.log(JSON.stringify(weatherInfo));
     const openWeatherTZ = weatherInfo.city.timezone;
     const timeNow = dateTime.getCurrLocalHourMin(openWeatherTZ);
 
@@ -161,28 +161,60 @@ function App() {
     setCurrSearch(searchQuery);
   };
 
-  const handleUseYourLocation = () => {
-    setShowGeo(true);
+  async function handleUseYourLocation() {
+    try {
+      const result = await navigator.permissions.query({ name: "geolocation" });
+      if (result.state === "prompt" || result.state === "granted") {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            handleLocationObtained(
+              position.coords.latitude,
+              position.coords.longitude
+            );
+          },
+          (error) => {
+            console.error("Error getting location:", error);
+          }
+        );
+      } else {
+        setLatitude("21.00626");
+        setLongitude("105.85537");
+      }
+    } catch (error) {
+      console.error("Error checking location permissions:", error);
+    }
+  }
+
+  const handleLocationObtained = async (lat, lng) => {
+    console.log(lat, lng);
+    setLatitude(lat);
+    setLongitude(lng);
+    const data = await reverseGeocode(lat, lng);
+    if (data) setCityName(data.name);
+    setSearchQuery("");
   };
 
-  const handleLocationObtained = useCallback(
-    (lat, lng) => {
-      setLatitude(lat);
-      setLongitude(lng);
-      setCityName(reverseGeocode(lat,lng).then(data=>data.name));
-      setSearchQuery("");
-      console.log(lat, lng);
-      setShowGeo(false);
-    },
-    [showGeo]
-  );
-
-
+  useEffect(() => {
+    navigator.permissions.query({ name: "geolocation" }).then((result) => {
+      if (result.state === "granted") {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            handleLocationObtained(
+              position.coords.latitude,
+              position.coords.longitude
+            );
+          },
+          (error) => {
+            console.error("Error getting location:", error);
+          }
+        );
+      }
+    });
+  }, []);
 
   // whenever locationInfo is reassigned, change the usestate latitude, longitude -> change the weather info
   useEffect(() => {
     if (!locationInfo || isLoadingLocation) return;
-    console.log(locationInfo);
     if (locationInfo.length > 0) {
       setLatitude(locationInfo[0].lat);
       setLongitude(locationInfo[0].lon);
@@ -237,9 +269,6 @@ function App() {
                 </li>
               </ul>
             )}
-            {showGeo && (
-              <GeoLocator onLocationObtained={handleLocationObtained} />
-            )}
           </div>
           <button className="btn ms-2 my-sm-0" type="submit">
             Search
@@ -251,8 +280,7 @@ function App() {
         maxTempsByDay &&
         minTempsByDay &&
         weatherByHours &&
-        weatherInfo &&
-        locationInfo && (
+        weatherInfo && (
           <div>
             <div className="first-row row mx-1">
               <div className="currWeather col-md bg-dark bg-opacity-50 p-3 rounded-4 shadow-lg border border-white border-opacity-25 m-1">
