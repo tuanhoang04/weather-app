@@ -338,7 +338,9 @@ function App() {
         </div>
       ) : (
         <div className="d-flex align-items-center">
-          <p className="fs-1">Loading...</p>
+          <p className="fs-1 text-white bg-dark bg-opacity-50 p-2 rounded-3 shadow-lg border border-white border-opacity-25 m-1">
+            Loading...
+          </p>
         </div>
       )}
     </div>
