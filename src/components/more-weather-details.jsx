@@ -11,9 +11,9 @@ export default function MoreDetails({
         "-" +
         Math.max(pressureSea, pressureGrnd)
       : pressureSea) + "hPa";
-  const formattedWind = windspeed + " meter/second";
+  const formattedWind = windspeed + "m/s";
   const formattedHumidity = humidity + "%";
-  const formattedVisibility = visibility + " meters";
+  const formattedVisibility = visibility + "m";
 
   return (
     <div className="d-flex p-2 flex-column">

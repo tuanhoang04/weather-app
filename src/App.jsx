@@ -171,6 +171,7 @@ function App() {
   // set the search query to the current input of the user -> fetch all location information
   const handleLocationSearch = (event) => {
     event.preventDefault();
+    document.getElementById('search-bar').blur();
     setCurrSearch(searchQuery);
   };
 
@@ -236,6 +237,7 @@ function App() {
         <form className="form-inline d-flex" onSubmit={handleLocationSearch}>
           <div style={{ position: "relative", width: "100%" }}>
             <input
+              id="search-bar"
               className="form-control w-100"
               type="search"
               placeholder="Search for cities"
@@ -277,64 +279,68 @@ function App() {
       </nav>
 
       {fourWeekDays &&
-        maxTempsByDay &&
-        minTempsByDay &&
-        weatherByHours &&
-        weatherInfo &&
-        currentWeatherInfo && (
-          <div>
-            <div className="first-row row mx-1">
-              <div className="currWeather col-md bg-dark bg-opacity-50 p-3 rounded-4 shadow-lg border border-white border-opacity-25 m-1">
-                <div className="d-flex flex-column p-2">
-                  <CurrentTime
-                    tz={weatherInfo?.city?.timezone}
-                    locationName={cityName}
-                    currHour={hour}
-                  />
-                  <hr />
-                  <MainWeather
-                    iconCode={currentWeatherInfo?.weather[0]?.icon}
-                    temp={currentWeatherInfo?.main?.temp}
-                    feelsLike={currentWeatherInfo?.main?.feels_like}
-                    description={currentWeatherInfo?.weather[0]?.description}
-                  />
-                </div>
-              </div>
-
-              <div className="moredetails col-md p-3 bg-dark bg-opacity-50 rounded-4 shadow-lg border border-white border-opacity-25 m-1">
-                <MoreDetails
-                  windspeed={currentWeatherInfo?.wind?.speed}
-                  humidity={currentWeatherInfo?.main?.humidity}
-                  pressureGrnd={currentWeatherInfo?.main?.grnd_level}
-                  pressureSea={currentWeatherInfo?.main?.sea_level}
-                  visibility={currentWeatherInfo?.visibility}
+      maxTempsByDay &&
+      minTempsByDay &&
+      weatherByHours &&
+      weatherInfo &&
+      currentWeatherInfo ? (
+        <div>
+          <div className="first-row row mx-1">
+            <div className="currWeather col-md bg-dark bg-opacity-50 p-3 rounded-4 shadow-lg border border-white border-opacity-25 m-1">
+              <div className="d-flex flex-column p-2">
+                <CurrentTime
+                  tz={weatherInfo?.city?.timezone}
+                  locationName={cityName}
+                  currHour={hour}
                 />
-              </div>
-
-              <div className="p-3 col-lg-6 d-flex justify-content-center align-items-center bg-dark bg-opacity-50 rounded-4 shadow-lg border border-white border-opacity-25 m-1">
-                <div
-                  className="d-flex flex-row overflow-auto align-items-center"
-                  style={{ WebkitOverflowScrolling: "touch" }}
-                >
-                  {weatherByHours.map((card) => card)}
-                </div>
+                <hr />
+                <MainWeather
+                  iconCode={currentWeatherInfo?.weather[0]?.icon}
+                  temp={currentWeatherInfo?.main?.temp}
+                  feelsLike={currentWeatherInfo?.main?.feels_like}
+                  description={currentWeatherInfo?.weather[0]?.description}
+                />
               </div>
             </div>
 
-            <div className="second-row row m-1 justify-content-between">
-              <div className="col-md-5 m-1 d-flex justify-content-center align-items-center bg-dark bg-opacity-50 rounded-4 shadow-lg border border-white border-opacity-25 p-0">
-                <Map latitude={latitude} longitude={longitude} />
-              </div>
-              <div className="col-md-6 m-1 d-flex justify-content-center align-items-center bg-dark bg-opacity-50 rounded-4 shadow-lg border border-white border-opacity-25 flex-wrap">
-                <ResponsiveChart
-                  fourWeekDays={fourWeekDays}
-                  maxTempsByDay={maxTempsByDay}
-                  minTempsByDay={minTempsByDay}
-                />
+            <div className="moredetails col-md p-3 bg-dark bg-opacity-50 rounded-4 shadow-lg border border-white border-opacity-25 m-1">
+              <MoreDetails
+                windspeed={currentWeatherInfo?.wind?.speed}
+                humidity={currentWeatherInfo?.main?.humidity}
+                pressureGrnd={currentWeatherInfo?.main?.grnd_level}
+                pressureSea={currentWeatherInfo?.main?.sea_level}
+                visibility={currentWeatherInfo?.visibility}
+              />
+            </div>
+
+            <div className="p-3 col-lg-6 d-flex justify-content-center align-items-center bg-dark bg-opacity-50 rounded-4 shadow-lg border border-white border-opacity-25 m-1">
+              <div
+                className="d-flex flex-row overflow-auto align-items-center"
+                style={{ WebkitOverflowScrolling: "touch" }}
+              >
+                {weatherByHours.map((card) => card)}
               </div>
             </div>
           </div>
-        )}
+
+          <div className="second-row row m-1 justify-content-between">
+            <div className="col-md-5 m-1 d-flex justify-content-center align-items-center bg-dark bg-opacity-50 rounded-4 shadow-lg border border-white border-opacity-25 p-0">
+              <Map latitude={latitude} longitude={longitude} />
+            </div>
+            <div className="col-md-6 m-1 d-flex justify-content-center align-items-center bg-dark bg-opacity-50 rounded-4 shadow-lg border border-white border-opacity-25 flex-wrap">
+              <ResponsiveChart
+                fourWeekDays={fourWeekDays}
+                maxTempsByDay={maxTempsByDay}
+                minTempsByDay={minTempsByDay}
+              />
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="d-flex align-items-center">
+          <p className="fs-1">Loading...</p>
+        </div>
+      )}
     </div>
   );
 }
