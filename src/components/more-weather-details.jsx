@@ -3,7 +3,7 @@ export default function MoreDetails({
   humidity,
   pressureGrnd,
   pressureSea,
-  rainProb,
+  visibility,
 }) {
   const formattedPressure =
     (pressureGrnd !== pressureSea
@@ -11,9 +11,9 @@ export default function MoreDetails({
         "-" +
         Math.max(pressureSea, pressureGrnd)
       : pressureSea) + "hPa";
-  const formattedWind = windspeed + " m/s";
+  const formattedWind = windspeed + " meter/second";
   const formattedHumidity = humidity + "%";
-  const formattedRainProb = Math.round(rainProb * 100) + "%";
+  const formattedVisibility = visibility + " meters";
 
   return (
     <div className="d-flex p-2 flex-column">
@@ -34,7 +34,7 @@ export default function MoreDetails({
       </p>
 
       <p className="text-white text-md-start m-1">
-        Rain probability: <b>{formattedRainProb}</b>
+        Visibility: <b>{formattedVisibility}</b>
       </p>
     </div>
   );

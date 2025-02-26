@@ -1,5 +1,6 @@
 import "./App.css";
 import useSWR from "swr";
+
 import CurrentTime from "./components/current-time.jsx";
 import MainWeather from "./components/main-weather.jsx";
 import MoreDetails from "./components/more-weather-details.jsx";
@@ -29,6 +30,19 @@ function App() {
   const [maxTempsByDay, setMaxTempsByDay] = useState([0, 0, 0, 0]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+  
+
+  const {
+    data: currentWeatherInfo,
+    currentWeatherError,
+    isLoadingCurrentWeather,
+  } = useSWR(
+    longitude && latitude
+      ? `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${APIKey}&units=metric`
+      : null,
+    fetcher
+  );
 
   const {
     data: weatherInfo,
@@ -266,7 +280,8 @@ function App() {
         maxTempsByDay &&
         minTempsByDay &&
         weatherByHours &&
-        weatherInfo && (
+        weatherInfo &&
+        currentWeatherInfo && (
           <div>
             <div className="first-row row mx-1">
               <div className="currWeather col-md bg-dark bg-opacity-50 p-3 rounded-4 shadow-lg border border-white border-opacity-25 m-1">
@@ -278,21 +293,21 @@ function App() {
                   />
                   <hr />
                   <MainWeather
-                    iconCode={weatherInfo.list[0].weather[0].icon}
-                    temp={weatherInfo.list[0].main.temp}
-                    feelsLike={weatherInfo.list[0].main.feels_like}
-                    description={weatherInfo.list[0].weather[0].description}
+                    iconCode={currentWeatherInfo?.weather[0]?.icon}
+                    temp={currentWeatherInfo?.main?.temp}
+                    feelsLike={currentWeatherInfo?.main?.feels_like}
+                    description={currentWeatherInfo?.weather[0]?.description}
                   />
                 </div>
               </div>
 
               <div className="moredetails col-md p-3 bg-dark bg-opacity-50 rounded-4 shadow-lg border border-white border-opacity-25 m-1">
                 <MoreDetails
-                  windspeed={weatherInfo.list[0].wind.speed}
-                  humidity={weatherInfo.list[0].main.humidity}
-                  pressureGrnd={weatherInfo.list[0].main.grnd_level}
-                  pressureSea={weatherInfo.list[0].main.sea_level}
-                  rainProb={weatherInfo.list[0].pop}
+                  windspeed={currentWeatherInfo?.wind?.speed}
+                  humidity={currentWeatherInfo?.main?.humidity}
+                  pressureGrnd={currentWeatherInfo?.main?.grnd_level}
+                  pressureSea={currentWeatherInfo?.main?.sea_level}
+                  visibility={currentWeatherInfo?.visibility}
                 />
               </div>
 
