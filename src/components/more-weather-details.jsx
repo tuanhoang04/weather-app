@@ -4,6 +4,8 @@ export default function MoreDetails({
   pressureGrnd,
   pressureSea,
   visibility,
+  rain,
+  snow,
 }) {
   const formattedPressure =
     (pressureGrnd !== pressureSea
@@ -14,6 +16,14 @@ export default function MoreDetails({
   const formattedWind = windspeed + "m/s";
   const formattedHumidity = humidity + "%";
   const formattedVisibility = visibility + "m";
+  let formattedRain = null;
+  let formattedSnow = null;
+  if (rain != null) {
+    formattedRain = rain + "mm/h";
+  }
+  if (snow != null) {
+    formattedSnow = snow + "mm/h";
+  }
 
   return (
     <div className="d-flex p-2 flex-column">
@@ -36,6 +46,17 @@ export default function MoreDetails({
       <p className="text-white text-md-start m-1">
         Visibility: <b>{formattedVisibility}</b>
       </p>
+      {formattedRain && (
+        <p className="text-white text-md-start m-1">
+          Rain: <b>{formattedRain}</b>
+        </p>
+      )}
+
+      {formattedSnow && (
+        <p className="text-white text-md-start m-1">
+          Snow: <b>{formattedSnow}</b>
+        </p>
+      )}
     </div>
   );
 }

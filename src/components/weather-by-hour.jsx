@@ -1,7 +1,7 @@
 import * as dateTime from "../utils/date-time";
 
 export default function WeatherByHour({ weatherIcon, temp, date, timezone }) {
-  const formattedTime = dateTime.convertToLocalHour(date,timezone);
+  const formattedTime = dateTime.convertToLocalHour(date, timezone);
   const formattedTemp = Math.round(temp) + "°C";
   const formattedWeatherIcon = `https://openweathermap.org/img/wn/${weatherIcon}@2x.png`;
 
@@ -12,7 +12,9 @@ export default function WeatherByHour({ weatherIcon, temp, date, timezone }) {
         alt="Weather icon"
         style={{ width: 75, height: 75 }}
       ></img>
-      <p className="text-light text-md-center fs-5">{formattedTemp}</p>
+      <p className="text-light text-md-center fs-5">
+        <b>{formattedTemp}</b>
+      </p>
       <p className="text-light text-md-center">{formattedTime}</p>
     </div>
   );

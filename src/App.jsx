@@ -31,8 +31,6 @@ function App() {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-  
-
   const {
     data: currentWeatherInfo,
     currentWeatherError,
@@ -90,15 +88,6 @@ function App() {
   useEffect(() => {
     if (!weatherInfo || !weatherInfo.list) return;
     const openWeatherTZ = weatherInfo.city.timezone;
-    const timeNow = dateTime.getCurrLocalHourMin(openWeatherTZ);
-
-    if (dateTime.isSunsetSunrise(timeNow)) {
-      setBackgroundImgURL("images/setrise.jpg");
-    } else if (dateTime.isDaytime(timeNow)) {
-      setBackgroundImgURL("images/day.jpg");
-    } else {
-      setBackgroundImgURL("images/night.jpg");
-    }
 
     let newWeatherByHours = new Array(9);
     for (let i = 0; i < 9; i++) {
@@ -171,7 +160,7 @@ function App() {
   // set the search query to the current input of the user -> fetch all location information
   const handleLocationSearch = (event) => {
     event.preventDefault();
-    document.getElementById('search-bar').blur();
+    document.getElementById("search-bar").blur();
     setCurrSearch(searchQuery);
   };
 
@@ -222,6 +211,22 @@ function App() {
       setCityName(locationInfo[0].name);
     }
   }, [locationInfo]);
+
+  useEffect(() => {
+    if (!currentWeatherInfo || isLoadingCurrentWeather) return;
+    const openWeatherTZ = currentWeatherInfo.timezone;
+    const timeNow = dateTime.getCurrLocalHourMin(openWeatherTZ);
+    const weatherCode = currentWeatherInfo.weather[0].id;
+    if (weatherCode > 199 && weatherCode < 550) {
+      setBackgroundImgURL("images/rainy.jpg");
+    } else if (dateTime.isSunsetSunrise(timeNow)) {
+      setBackgroundImgURL("images/setrise.jpg");
+    } else if (dateTime.isDaytime(timeNow)) {
+      setBackgroundImgURL("images/day.jpg");
+    } else {
+      setBackgroundImgURL("images/night.jpg");
+    }
+  }, [currentWeatherInfo]);
 
   return (
     <div
@@ -278,7 +283,12 @@ function App() {
         </form>
       </nav>
 
-      {fourWeekDays &&
+      {!isLoadingCurrentWeather &&
+      !isLoadingLocation &&
+      !isLoadingWeather &&
+      hour &&
+      cityName &&
+      fourWeekDays &&
       maxTempsByDay &&
       minTempsByDay &&
       weatherByHours &&
@@ -310,6 +320,8 @@ function App() {
                 pressureGrnd={currentWeatherInfo?.main?.grnd_level}
                 pressureSea={currentWeatherInfo?.main?.sea_level}
                 visibility={currentWeatherInfo?.visibility}
+                rain={currentWeatherInfo?.rain?.["1h"]}
+                snow={currentWeatherInfo?.snow?.["1h"]}
               />
             </div>
 
