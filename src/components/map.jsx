@@ -1,9 +1,7 @@
 import { MapContainer, TileLayer } from "react-leaflet";
-import useMediaQuery from "@mui/material/useMediaQuery";
 
-function Map({ latitude, longitude, isMobileDevice }) {
-  const isMobile = useMediaQuery("(max-width:768px)");
-  return isMobile ? (
+function Map({ latitude, longitude, isMobi }) {
+  return isMobi ? (
     <div
       className="d-flex flex-column justify-content-end align-items-center bg-dark bg-opacity-50 rounded-4 shadow-lg border border-white border-opacity-25"
       style={{ width: "100%" }}
@@ -20,7 +18,7 @@ function Map({ latitude, longitude, isMobileDevice }) {
           borderBottomLeftRadius:  "0px",
           borderBottomRightRadius: "0px",
         }}
-        dragging={!isMobile}
+        dragging={false}
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
       </MapContainer>
@@ -43,7 +41,7 @@ function Map({ latitude, longitude, isMobileDevice }) {
           borderBottomLeftRadius: "15px",
           borderBottomRightRadius: "15px",
         }}
-        dragging={!isMobile}
+        dragging={true}
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
       </MapContainer>

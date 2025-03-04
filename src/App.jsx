@@ -7,6 +7,7 @@ import MoreDetails from "./components/more-weather-details.jsx";
 import WeatherByHour from "./components/weather-by-hour.jsx";
 import Map from "./components/map.jsx";
 import { useEffect, useState, useCallback } from "react";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import ResponsiveChart from "./components/chart.jsx";
 import * as dateTime from "./utils/date-time.js";
 import NavBar from "./components/nav-bar.jsx";
@@ -29,7 +30,7 @@ function App() {
   const [minTempsByDay, setMinTempsByDay] = useState([0, 0, 0, 0]);
   const [maxTempsByDay, setMaxTempsByDay] = useState([0, 0, 0, 0]);
   const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-
+  const isMobile = useMediaQuery("(max-width:768px)");
   const {
     data: currentWeatherInfo,
     currentWeatherError,
@@ -274,6 +275,7 @@ function App() {
                   tz={weatherInfo?.city?.timezone}
                   locationName={cityName}
                   currHour={hour}
+                  isMobi={isMobile}
                 />
                 <hr />
                 <MainWeather
@@ -281,6 +283,7 @@ function App() {
                   temp={currentWeatherInfo?.main?.temp}
                   feelsLike={currentWeatherInfo?.main?.feels_like}
                   description={currentWeatherInfo?.weather[0]?.description}
+                  isMobi={isMobile}
                 />
               </div>
             </div>
@@ -309,7 +312,7 @@ function App() {
 
           <div className="second-row row m-1 justify-content-between">
             <div className="col m-1 d-flex justify-content-center align-items-center p-0">
-              <Map latitude={latitude} longitude={longitude} />
+              <Map latitude={latitude} longitude={longitude} isMobi={isMobile} />
             </div>
             <div className="col m-1 d-flex justify-content-center align-items-center bg-dark bg-opacity-50 rounded-4 shadow-lg border border-white border-opacity-25 flex-wrap">
               <ResponsiveChart

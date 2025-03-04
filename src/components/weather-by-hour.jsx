@@ -10,7 +10,7 @@ export default function WeatherByHour({ weatherIcon, temp, date, timezone }) {
       <img
         src={formattedWeatherIcon}
         alt="Weather icon"
-        style={{ width: 78, height: 66 }}
+        style={{ width: 78, height: 68 }}
       ></img>
       <p className="text-light text-md-center fs-5 mb-4">
         <b>{formattedTemp}</b>
