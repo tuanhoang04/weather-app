@@ -20,15 +20,19 @@ export default function MoreDetails({
   let formattedSnow = null;
   if (rain != null) {
     formattedRain = rain + "mm/h";
+  }else{
+    formattedRain = 0 + "mm/h";
   }
   if (snow != null) {
     formattedSnow = snow + "mm/h";
+  } else {
+    formattedSnow = 0 + "mm/h";
   }
 
   return (
     <div className="d-flex p-2 flex-column">
       <p className="text-light text-md-start fs-5">
-        <b>More Details: </b>
+        <b>More Details </b>
       </p>
 
       <p className="text-white text-md-start m-1">

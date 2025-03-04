@@ -12,9 +12,9 @@ export default function MainWeather({
     <div className="row">
       <div className="col-sm-6 d-flex flex-column justify-content-end">
         <img
-          src={`https://openweathermap.org/img/wn/${iconCode}@2x.png`}
+          src={`../animated/${iconCode}.svg`}
           alt="Weather icon"
-          style={{ width: 71, height: 71 }}
+          style={{ width: 80, height: 66 }}
         ></img>
         <p className="text-light text-sm m-1 ">{formattedDescription}</p>
       </div>

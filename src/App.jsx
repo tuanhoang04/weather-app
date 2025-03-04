@@ -9,7 +9,7 @@ import Map from "./components/map.jsx";
 import { useEffect, useState, useCallback } from "react";
 import ResponsiveChart from "./components/chart.jsx";
 import * as dateTime from "./utils/date-time.js";
-
+import NavBar from "./components/nav-bar.jsx";
 // openweathermap 5 days weather forecast API key
 const APIKey = "917f68a3126efb6f9a8db6fce3b5f830";
 
@@ -20,7 +20,7 @@ function App() {
   const [backgroundImgURL, setBackgroundImgURL] = useState("");
   const [latitude, setLatitude] = useState();
   const [longitude, setLongitude] = useState();
-  const [searchQuery, setSearchQuery] = useState();
+  const [searchTerm, setSearchTerm] = useState();
   const [currSearch, setCurrSearch] = useState();
   const [cityName, setCityName] = useState("");
   const [hour, setHour] = useState(null);
@@ -28,7 +28,6 @@ function App() {
   const [weatherByHours, setWeatherByHours] = useState(new Array(9));
   const [minTempsByDay, setMinTempsByDay] = useState([0, 0, 0, 0]);
   const [maxTempsByDay, setMaxTempsByDay] = useState([0, 0, 0, 0]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
   const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
   const {
@@ -161,7 +160,7 @@ function App() {
   const handleLocationSearch = (event) => {
     event.preventDefault();
     document.getElementById("search-bar").blur();
-    setCurrSearch(searchQuery);
+    setCurrSearch(searchTerm);
   };
 
   async function handleUseYourLocation() {
@@ -184,23 +183,40 @@ function App() {
     setLongitude(lng);
     const data = await reverseGeocode(lat, lng);
     if (data) setCityName(data.name);
-    setSearchQuery("");
+    setSearchTerm("");
   };
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        handleLocationObtained(
-          position.coords.latitude,
-          position.coords.longitude
-        );
-      },
-      (error) => {
-        setLatitude("21.00626");
-        setLongitude("105.85537");
-      }
-    );
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          handleLocationObtained(
+            position.coords.latitude,
+            position.coords.longitude
+          );
+        },
+        (error) => {
+          setLatitude("21.00626");
+          setLongitude("105.85537");
+          setCityName("Hanoi");
+        }
+      );
+
+    } else {
+      setLatitude("21.00626");
+      setLongitude("105.85537");
+      setCityName("Hanoi");
+    }
   }, []);
+
+  // testing
+  useEffect(() => {
+    if (latitude && longitude) {
+      console.log(
+        `Latitude: ${latitude}, Longitude: ${longitude}, City: ${cityName}`
+      );
+    }
+  }, [latitude, longitude, cityName]); // Log when state updates
 
   // whenever locationInfo is reassigned, change the usestate latitude, longitude -> change the weather info
   useEffect(() => {
@@ -238,51 +254,7 @@ function App() {
       }}
       className="container-fluid outer d-flex flex-column justify-content-between p-3"
     >
-      <nav className="d-flex flex-row navbar justify-content-center w-100">
-        <form className="form-inline d-flex" onSubmit={handleLocationSearch}>
-          <div style={{ position: "relative", width: "100%" }}>
-            <input
-              id="search-bar"
-              className="form-control w-100"
-              type="search"
-              placeholder="Search for cities"
-              spellCheck="false"
-              autoComplete="off"
-              aria-label="Search"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onFocus={() => setShowSuggestions(true)}
-              // Using onBlur with a short timeout allows the click to register
-              onBlur={() => setTimeout(() => setShowSuggestions(false), 100)}
-            />
-            {showSuggestions && (
-              <ul
-                className="suggestions-list bg-dark text-white bg-opacity-75 rounded-1 shadow-lg border border-white border-opacity-25"
-                style={{
-                  listStyle: "none",
-                  padding: 0,
-                  margin: 0,
-                  position: "absolute",
-                  background: "white",
-                  width: "100%",
-                  zIndex: 1000,
-                }}
-              >
-                <li
-                  style={{ padding: "8px", cursor: "pointer" }}
-                  onMouseDown={handleUseYourLocation}
-                >
-                  Use your location
-                </li>
-              </ul>
-            )}
-          </div>
-          <button className="btn ms-2 my-sm-0" type="submit">
-            Search
-          </button>
-        </form>
-      </nav>
-
+      <NavBar handleSubmit={handleLocationSearch} handleYourLocation={handleUseYourLocation} searchQuery={searchTerm} setSearchQuery={setSearchTerm} />
       {!isLoadingCurrentWeather &&
       !isLoadingLocation &&
       !isLoadingWeather &&
@@ -336,10 +308,10 @@ function App() {
           </div>
 
           <div className="second-row row m-1 justify-content-between">
-            <div className="col-md-5 m-1 d-flex justify-content-center align-items-center bg-dark bg-opacity-50 rounded-4 shadow-lg border border-white border-opacity-25 p-0">
+            <div className="col m-1 d-flex justify-content-center align-items-center p-0">
               <Map latitude={latitude} longitude={longitude} />
             </div>
-            <div className="col-md-6 m-1 d-flex justify-content-center align-items-center bg-dark bg-opacity-50 rounded-4 shadow-lg border border-white border-opacity-25 flex-wrap">
+            <div className="col m-1 d-flex justify-content-center align-items-center bg-dark bg-opacity-50 rounded-4 shadow-lg border border-white border-opacity-25 flex-wrap">
               <ResponsiveChart
                 fourWeekDays={fourWeekDays}
                 maxTempsByDay={maxTempsByDay}
