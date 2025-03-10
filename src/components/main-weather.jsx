@@ -16,13 +16,15 @@ export default function MainWeather({
         <img
           src={`../animated/${iconCode}.svg`}
           alt="Weather icon"
-          style={{ width: 90, height: 76 }}
+          style={{ width: 100, height: 87 }}
         ></img>
         <p className="text-light text-sm m-1 fs-3 ">{formattedDescription}</p>
       </div>
 
       <div className="col-sm-6 d-flex flex-column justify-content-center align-items-center">
-        <p className="text-white text-md m-1 fs-1">{formattedTemp + "°C"}</p>
+        <p className="text-white text-md m-1 fs-1">
+          <b>{formattedTemp + "°C"}</b>
+        </p>
         <p className="text-light text-sm m-1 fs-5">
           Feels like {formattedFeelsLike + "°C"}
         </p>
@@ -34,14 +36,14 @@ export default function MainWeather({
         <img
           src={`../animated/${iconCode}.svg`}
           alt="Weather icon"
-          style={{ width: 80, height: 66 }}
+          style={{ width: 100, height: 80 }}
         ></img>
-        <p className="text-light text-sm m-1 ">{formattedDescription}</p>
+        <p className="text-light text-sm m-1 fs-5">{formattedDescription}</p>
       </div>
 
       <div className="col-sm-6 d-flex flex-column justify-content-end">
         <p className="text-white text-md m-1 fs-1">{formattedTemp + "°C"}</p>
-        <p className="text-light text-sm m-1 ">
+        <p className="text-light text-sm m-1 fs-5">
           Feels like {formattedFeelsLike + "°C"}
         </p>
       </div>

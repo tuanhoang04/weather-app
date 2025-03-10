@@ -93,11 +93,12 @@ function App() {
     for (let i = 0; i < 9; i++) {
       newWeatherByHours[i] = (
         <WeatherByHour
-          key={weatherInfo.list[i].dt}
+          key={weatherInfo.list[i].dt + cityName}
           weatherIcon={weatherInfo.list[i].weather[0].icon}
           temp={weatherInfo.list[i].main.temp}
           date={weatherInfo.list[i].dt_txt}
           timezone={openWeatherTZ}
+          isMobi={isMobile}
         />
       );
     }
@@ -165,16 +166,24 @@ function App() {
   };
 
   async function handleUseYourLocation() {
-    try {
-      navigator.geolocation.getCurrentPosition((position) => {
-        handleLocationObtained(
-          position.coords.latitude,
-          position.coords.longitude
-        );
-      });
-    } catch (error) {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          handleLocationObtained(
+            position.coords.latitude,
+            position.coords.longitude
+          );
+        },
+        (error) => {
+          setLatitude("21.00626");
+          setLongitude("105.85537");
+          setCityName("Hanoi");
+        }
+      );
+    } else {
       setLatitude("21.00626");
       setLongitude("105.85537");
+      setCityName("Hanoi");
     }
   }
 
@@ -202,7 +211,6 @@ function App() {
           setCityName("Hanoi");
         }
       );
-
     } else {
       setLatitude("21.00626");
       setLongitude("105.85537");
@@ -250,16 +258,18 @@ function App() {
       style={{
         background: `url(${backgroundImgURL})`,
         backgroundSize: "cover",
-        backgroundPosition: "center",
+        backgroundPosition: "right",
         minHeight: "100vh",
       }}
-      className="container-fluid outer d-flex flex-column justify-content-between p-3"
+      className="container-fluid outer d-flex flex-column p-3"
     >
-      <NavBar handleSubmit={handleLocationSearch} handleYourLocation={handleUseYourLocation} searchQuery={searchTerm} setSearchQuery={setSearchTerm} />
-      {!isLoadingCurrentWeather &&
-      !isLoadingLocation &&
-      !isLoadingWeather &&
-      hour &&
+      <NavBar
+        handleSubmit={handleLocationSearch}
+        handleYourLocation={handleUseYourLocation}
+        searchQuery={searchTerm}
+        setSearchQuery={setSearchTerm}
+      />
+      {hour &&
       cityName &&
       fourWeekDays &&
       maxTempsByDay &&
@@ -267,8 +277,8 @@ function App() {
       weatherByHours &&
       weatherInfo &&
       currentWeatherInfo ? (
-        <div>
-          <div className="first-row row mx-1">
+        <div className="d-flex flex-column h-100 flex-grow-1 justify-content-evenly">
+          <div className="first-row row justify-content-center mx-1">
             <div className="currWeather col-md bg-dark bg-opacity-50 p-3 rounded-4 shadow-lg border border-white border-opacity-25 m-1">
               <div className="d-flex flex-column p-2">
                 <CurrentTime
@@ -297,6 +307,7 @@ function App() {
                 visibility={currentWeatherInfo?.visibility}
                 rain={currentWeatherInfo?.rain?.["1h"]}
                 snow={currentWeatherInfo?.snow?.["1h"]}
+                isMobi={isMobile}
               />
             </div>
 
@@ -310,21 +321,44 @@ function App() {
             </div>
           </div>
 
-          <div className="second-row row m-1 justify-content-between">
-            <div className="col m-1 d-flex justify-content-center align-items-center p-0">
-              <Map latitude={latitude} longitude={longitude} isMobi={isMobile} />
+          {isMobile ? (
+            <div className="justify-content-between m-1">
+              <div className="d-flex justify-content-center align-items-center p-0 mb-2">
+                <Map
+                  latitude={latitude}
+                  longitude={longitude}
+                  isMobi={isMobile}
+                />
+              </div>
+              <div className="d-flex justify-content-center align-items-center bg-dark bg-opacity-50 rounded-4 shadow-lg border border-white border-opacity-25 flex-wrap">
+                <ResponsiveChart
+                  fourWeekDays={fourWeekDays}
+                  maxTempsByDay={maxTempsByDay}
+                  minTempsByDay={minTempsByDay}
+                />
+              </div>
             </div>
-            <div className="col m-1 d-flex justify-content-center align-items-center bg-dark bg-opacity-50 rounded-4 shadow-lg border border-white border-opacity-25 flex-wrap">
-              <ResponsiveChart
-                fourWeekDays={fourWeekDays}
-                maxTempsByDay={maxTempsByDay}
-                minTempsByDay={minTempsByDay}
-              />
+          ) : (
+            <div className="second-row row justify-content-between m-1">
+              <div className="col m-1 d-flex justify-content-center align-items-center p-0">
+                <Map
+                  latitude={latitude}
+                  longitude={longitude}
+                  isMobi={isMobile}
+                />
+              </div>
+              <div className="col m-1 d-flex justify-content-center align-items-center bg-dark bg-opacity-50 rounded-4 shadow-lg border border-white border-opacity-25 flex-wrap">
+                <ResponsiveChart
+                  fourWeekDays={fourWeekDays}
+                  maxTempsByDay={maxTempsByDay}
+                  minTempsByDay={minTempsByDay}
+                />
+              </div>
             </div>
-          </div>
+          )}
         </div>
       ) : (
-        <div className="d-flex align-items-center">
+        <div className="d-flex w-100 h-100 flex-column flex-grow-1 justify-content-center align-items-center">
           <p className="fs-1 text-white bg-dark bg-opacity-50 p-2 rounded-3 shadow-lg border border-white border-opacity-25 m-1">
             Loading...
           </p>

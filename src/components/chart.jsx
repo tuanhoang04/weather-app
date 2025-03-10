@@ -7,7 +7,7 @@ const ResponsiveChart = ({ fourWeekDays, maxTempsByDay, minTempsByDay }) => {
   return (
     <div
       className="chart-container px-2"
-      style={{ height: "300px", width: "100%" }}
+      style={{ height: "400px", width: "100%" }}
     >
       {isMobile ? (
         // mobile phone chart (linechart from ApexCharts)
@@ -136,7 +136,7 @@ const ResponsiveChart = ({ fourWeekDays, maxTempsByDay, minTempsByDay }) => {
               },
             ]}
             type="line"
-            height="302"
+            height="400"
           />
         </div>
       ) : (

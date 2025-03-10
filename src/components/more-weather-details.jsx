@@ -6,6 +6,7 @@ export default function MoreDetails({
   visibility,
   rain,
   snow,
+  isMobi
 }) {
   const formattedPressure =
     (pressureGrnd !== pressureSea
@@ -29,35 +30,68 @@ export default function MoreDetails({
     formattedSnow = 0 + "mm/h";
   }
 
-  return (
+  return isMobi ? (
     <div className="d-flex p-2 flex-column">
-      <p className="text-light text-md-start fs-5">
+      <p className="text-light text-md-start fs-3">
         <b>More Details </b>
       </p>
 
-      <p className="text-white text-md-start m-1">
+      <p className="text-white text-md-start m-1 fs-5">
         Windspeed: <b>{formattedWind}</b>
       </p>
 
-      <p className="text-white text-md-start m-1">
+      <p className="text-white text-md-start m-1 fs-5">
         Air humidity: <b>{formattedHumidity}</b>
       </p>
 
-      <p className="text-white text-md-start m-1">
+      <p className="text-white text-md-start m-1 fs-5">
         Pressure: <b>{formattedPressure}</b>
       </p>
 
-      <p className="text-white text-md-start m-1">
+      <p className="text-white text-md-start m-1 fs-5">
         Visibility: <b>{formattedVisibility}</b>
       </p>
       {formattedRain && (
-        <p className="text-white text-md-start m-1">
+        <p className="text-white text-md-start m-1 fs-5">
           Rain: <b>{formattedRain}</b>
         </p>
       )}
 
       {formattedSnow && (
-        <p className="text-white text-md-start m-1">
+        <p className="text-white text-md-start m-1 fs-5">
+          Snow: <b>{formattedSnow}</b>
+        </p>
+      )}
+    </div>
+  ) : (
+    <div className="d-flex p-2 flex-column">
+      <p className="text-light text-md-start fs-4">
+        <b>More Details </b>
+      </p>
+
+      <p className="text-white text-md-start m-1 fs-5">
+        Windspeed: <b>{formattedWind}</b>
+      </p>
+
+      <p className="text-white text-md-start m-1 fs-5">
+        Air humidity: <b>{formattedHumidity}</b>
+      </p>
+
+      <p className="text-white text-md-start m-1 fs-5">
+        Pressure: <b>{formattedPressure}</b>
+      </p>
+
+      <p className="text-white text-md-start m-1 fs-5">
+        Visibility: <b>{formattedVisibility}</b>
+      </p>
+      {formattedRain && (
+        <p className="text-white text-md-start m-1 fs-5">
+          Rain: <b>{formattedRain}</b>
+        </p>
+      )}
+
+      {formattedSnow && (
+        <p className="text-white text-md-start m-1 fs-5">
           Snow: <b>{formattedSnow}</b>
         </p>
       )}

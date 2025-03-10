@@ -11,7 +11,7 @@ function Map({ latitude, longitude, isMobi }) {
         zoom={14}
         key={`${latitude}-${longitude}`} // Ensures map updates when location changes
         style={{
-          height: "300px",
+          height: "400px",
           width: "100%",
           borderTopRightRadius: "15px",
           borderTopLeftRadius: "15px",
@@ -34,7 +34,7 @@ function Map({ latitude, longitude, isMobi }) {
         zoom={14}
         key={`${latitude}-${longitude}`} // Ensures map updates when location changes
         style={{
-          height: "300px",
+          height: "400px",
           width: "100%",
           borderTopRightRadius: "15px",
           borderTopLeftRadius: "15px",
