@@ -158,6 +158,13 @@ function App() {
     setWeatherByHours(newWeatherByHours);
   }, [weatherInfo]);
 
+  useEffect(() => {
+    document.documentElement.style.setProperty(
+      "--dynamic-bg-image",
+      `url(${backgroundImgURL})`
+    );
+  }, [backgroundImgURL]);
+  
   // set the search query to the current input of the user -> fetch all location information
   const handleLocationSearch = (event) => {
     event.preventDefault();
@@ -254,15 +261,7 @@ function App() {
   }, [currentWeatherInfo]);
 
   return (
-    <div
-      style={{
-        background: `url(${backgroundImgURL})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        minHeight: "100vh",
-      }}
-      className="container-fluid d-flex flex-column p-3"
-    >
+    <div className="container-fluid d-flex flex-column p-3 responsive-bg">
       <NavBar
         handleSubmit={handleLocationSearch}
         handleYourLocation={handleUseYourLocation}
