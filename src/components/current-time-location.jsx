@@ -1,12 +1,12 @@
 import * as dateTime from "../utils/date-time";
 
-export default function CurrentTime({ tz, locationName, currHour, isMobi }) {
+export default function CurrentTimeLocation({ tz, locationName, currHour, isMobi }) {
   const formattedWeekday = dateTime.getCurrLocalWeekday(tz);
   const formattedDate = dateTime.getCurrLocalDate(tz);
   return isMobi ? (
     <div className="row justify-content-between">
       <div className="d-flex justify-content-center align-items-center">
-        <p className="text-light text-lg-start fs-2 m-0">
+        <p className="text-light text-center fs-2 m-0">
           <b>{locationName ? locationName : "Hà Nội"}</b>
         </p>
       </div>
@@ -22,8 +22,8 @@ export default function CurrentTime({ tz, locationName, currHour, isMobi }) {
       </div>
     </div>
   ) : (
-    <div className="row justify-content-between">
-      <p className="col-sm-6 text-light text-lg-start fs-3 m-0">
+    <div className="row justify-content-between ">
+      <p className="col-sm-6 text-light text-lg-start fs-3">
         <b>{locationName ? locationName : "Hà Nội"}</b>
       </p>
       <div className="col-sm-6">

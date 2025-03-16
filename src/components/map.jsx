@@ -12,10 +12,10 @@ function Map({ latitude, longitude, isMobi }) {
         key={`${latitude}-${longitude}`} // Ensures map updates when location changes
         style={{
           height: "400px",
-          width: "100%",
+          width: "99.8%",
           borderTopRightRadius: "15px",
           borderTopLeftRadius: "15px",
-          borderBottomLeftRadius:  "0px",
+          borderBottomLeftRadius: "0px",
           borderBottomRightRadius: "0px",
         }}
         dragging={false}
@@ -25,9 +25,10 @@ function Map({ latitude, longitude, isMobi }) {
       <p className="text-white flex-end m-1">Use two fingers to drag</p>
     </div>
   ) : (
+    // desktop map
     <div
-      className="d-flex flex-column justify-content-end align-items-center"
-      style={{ width: "80%" }}
+      className="d-flex flex-column justify-content-end align-items-center border border-black rounded-4 border-opacity-25"
+      style={{ width: "90%" }}
     >
       <MapContainer
         center={[latitude, longitude]}
@@ -36,10 +37,7 @@ function Map({ latitude, longitude, isMobi }) {
         style={{
           height: "400px",
           width: "100%",
-          borderTopRightRadius: "15px",
-          borderTopLeftRadius: "15px",
-          borderBottomLeftRadius: "15px",
-          borderBottomRightRadius: "15px",
+          borderRadius: "15px",
         }}
         dragging={true}
       >

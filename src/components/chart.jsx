@@ -150,7 +150,7 @@ const ResponsiveChart = ({ fourWeekDays, maxTempsByDay, minTempsByDay }) => {
           ]}
           yAxis={[
             {
-              label: "Temperature (°C)", // Y-axis label text (e.g., Temperature)
+              label: "Temperature (°C)",
             },
           ]}
           series={[
@@ -167,6 +167,10 @@ const ResponsiveChart = ({ fourWeekDays, maxTempsByDay, minTempsByDay }) => {
               color: "#4e79a7",
             },
           ]}
+          sx={{
+            "& .MuiChartsAxis-tickLabel tspan": { fontSize: "14px" },
+            "& g.MuiChartsAxis-label": { margin: "15px" },
+          }}
         />
       )}
     </div>

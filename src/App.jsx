@@ -1,7 +1,7 @@
 import "./App.css";
 import useSWR from "swr";
 
-import CurrentTime from "./components/current-time.jsx";
+import CurrentTimeLocation from "./components/current-time-location.jsx";
 import MainWeather from "./components/main-weather.jsx";
 import MoreDetails from "./components/more-weather-details.jsx";
 import WeatherByHour from "./components/weather-by-hour.jsx";
@@ -27,8 +27,8 @@ function App() {
   const [hour, setHour] = useState(null);
   const [fourWeekDays, setFourWeekDays] = useState(null);
   const [weatherByHours, setWeatherByHours] = useState(new Array(9));
-  const [minTempsByDay, setMinTempsByDay] = useState([0, 0, 0, 0]);
-  const [maxTempsByDay, setMaxTempsByDay] = useState([0, 0, 0, 0]);
+  const [minTempsByDay, setMinTempsByDay] = useState([0, 0, 0, 0, 0]);
+  const [maxTempsByDay, setMaxTempsByDay] = useState([0, 0, 0, 0, 0]);
   const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   const isMobile = useMediaQuery("(max-width:768px)");
   const {
@@ -258,10 +258,10 @@ function App() {
       style={{
         background: `url(${backgroundImgURL})`,
         backgroundSize: "cover",
-        backgroundPosition: "right",
+        backgroundPosition: "center",
         minHeight: "100vh",
       }}
-      className="container-fluid outer d-flex flex-column p-3"
+      className="container-fluid d-flex flex-column p-3"
     >
       <NavBar
         handleSubmit={handleLocationSearch}
@@ -279,9 +279,9 @@ function App() {
       currentWeatherInfo ? (
         <div className="d-flex flex-column h-100 flex-grow-1 justify-content-evenly">
           <div className="first-row row justify-content-center mx-1">
-            <div className="currWeather col-md bg-dark bg-opacity-50 p-3 rounded-4 shadow-lg border border-white border-opacity-25 m-1">
+            <div className="currWeather col-md bg-dark bg-opacity-50 p-3 rounded-4 shadow-lg border border-white border-opacity-25 my-1 me-lg-3">
               <div className="d-flex flex-column p-2">
-                <CurrentTime
+                <CurrentTimeLocation
                   tz={weatherInfo?.city?.timezone}
                   locationName={cityName}
                   currHour={hour}
@@ -298,7 +298,7 @@ function App() {
               </div>
             </div>
 
-            <div className="moredetails col-md p-3 bg-dark bg-opacity-50 rounded-4 shadow-lg border border-white border-opacity-25 m-1">
+            <div className="moredetails col-md p-3 bg-dark bg-opacity-50 rounded-4 shadow-lg border border-white border-opacity-25 my-1 me-lg-3">
               <MoreDetails
                 windspeed={currentWeatherInfo?.wind?.speed}
                 humidity={currentWeatherInfo?.main?.humidity}
@@ -311,7 +311,7 @@ function App() {
               />
             </div>
 
-            <div className="p-3 col-lg-6 d-flex justify-content-center align-items-center bg-dark bg-opacity-50 rounded-4 shadow-lg border border-white border-opacity-25 m-1">
+            <div className="p-3 col-lg-6 d-flex justify-content-center align-items-center bg-dark bg-opacity-50 rounded-4 shadow-lg border border-white border-opacity-25 my-1">
               <div
                 className="d-flex flex-row overflow-auto align-items-center"
                 style={{ WebkitOverflowScrolling: "touch" }}
@@ -340,14 +340,14 @@ function App() {
             </div>
           ) : (
             <div className="second-row row justify-content-between m-1">
-              <div className="col m-1 d-flex justify-content-center align-items-center p-0">
+              <div className="col my-1 d-flex justify-content-center align-items-center p-0">
                 <Map
                   latitude={latitude}
                   longitude={longitude}
                   isMobi={isMobile}
                 />
               </div>
-              <div className="col m-1 d-flex justify-content-center align-items-center bg-dark bg-opacity-50 rounded-4 shadow-lg border border-white border-opacity-25 flex-wrap">
+              <div className="col my-1 d-flex justify-content-center align-items-center bg-dark bg-opacity-50 rounded-4 shadow-lg border border-white border-opacity-25 flex-wrap ms-4">
                 <ResponsiveChart
                   fourWeekDays={fourWeekDays}
                   maxTempsByDay={maxTempsByDay}
