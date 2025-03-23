@@ -1,4 +1,4 @@
-Weather App project for the IWS course.
+Weather App project for IWS (Internet & Web Services) course.
 Technologies used: ReactJS, Luxon (library for date and time, mainly used timezone functions for this project), Bootstrap, OpenWeatherMap API, Leaflet Openstreetmap, OpenStreetMap geocoding APIs.
 
 Example image:
