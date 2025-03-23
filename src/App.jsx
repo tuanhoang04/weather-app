@@ -158,6 +158,7 @@ function App() {
     setWeatherByHours(newWeatherByHours);
   }, [weatherInfo]);
 
+  // Update background image with a css variable, for proper styling
   useEffect(() => {
     document.documentElement.style.setProperty(
       "--dynamic-bg-image",
@@ -250,13 +251,13 @@ function App() {
     const timeNow = dateTime.getCurrLocalHourMin(openWeatherTZ);
     const weatherCode = currentWeatherInfo.weather[0].id;
     if (weatherCode > 199 && weatherCode < 550) {
-      setBackgroundImgURL("images/rainy.jpg");
+      setBackgroundImgURL("/images/rainy.jpg");
     } else if (dateTime.isSunsetSunrise(timeNow)) {
-      setBackgroundImgURL("images/setrise.jpg");
+      setBackgroundImgURL("/images/setrise.jpg");
     } else if (dateTime.isDaytime(timeNow)) {
-      setBackgroundImgURL("images/day.jpg");
+      setBackgroundImgURL("/images/day.jpg");
     } else {
-      setBackgroundImgURL("images/night.jpg");
+      setBackgroundImgURL("/images/night.jpg");
     }
   }, [currentWeatherInfo]);
 

@@ -1,3 +1,8 @@
+/* fallback the variable to no background by default */
+:root {
+  --dynamic-bg-image: none;
+}
+
 .responsive-bg {
   background-image: var(--dynamic-bg-image);
   background-position: center;
@@ -11,11 +16,6 @@ input.form-control {
   background-color: rgba(0, 0, 0, 0.4);
   color: white;
   border-color: gray;
-}
-
-input.formcontrol:focus {
-  background-color: rgba(0, 0, 0, 0.4) !important;
-  border-color: gray !important;
 }
 
 .form-control::placeholder {

@@ -1,0 +1,68 @@
+/* fallback the variable to no background by default */
+:root {
+  --dynamic-bg-image: none;
+}
+
+.responsive-bg {
+  background-image: var(--dynamic-bg-image);
+  background-position: center;
+  min-height: 100vh;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+
+input.form-control {
+  background-color: rgba(0, 0, 0, 0.4);
+  color: white;
+  border-color: gray;
+}
+
+.form-control::placeholder {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: white !important;
+  opacity: 1; /* Firefox */
+}
+
+.form-control::-ms-input-placeholder {
+  /* Microsoft Edge */
+  color: white !important;
+}
+
+.navbar button {
+  background-color: rgba(0, 0, 0, 0.4);
+  border: 1px solid gray;
+  color: white;
+}
+
+.navbar button:hover {
+  background-color: rgba(0, 0, 0, 0.6);
+  border: 1px solid gray;
+  color: white;
+}
+
+.MuiChartsAxis-bottom .MuiChartsAxis-line,
+.MuiChartsAxis-left .MuiChartsAxis-line {
+  stroke: white !important;
+  stroke-width: 0.8;
+}
+
+hr {
+  border: 1px solid rgba(255, 255, 255, 0.9) !important;
+}
+
+.MuiChartsAxis-tickLabel,
+.MuiChartsAxis-label,
+.MuiChartsLegend-series text {
+  fill: white !important;
+}
+
+.MuiChartsAxis-tick,
+.MuiChartsAxisHighlight-root {
+  stroke: white !important;
+}
+
+.leaflet-control-attribution.leaflet-control {
+  visibility: hidden;
+}
+
